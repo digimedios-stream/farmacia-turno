@@ -179,57 +179,59 @@
         });
     }
     
-    function renderPharmacyCard(pharmacy) {
-        const nombre = pharmacy.nombre || "Farmacia de turno";
-        const direccion = pharmacy.direccion || "Dirección no disponible";
-        const telefono = pharmacy.telefono || "";
-        let mapsUrl = pharmacy.urlMaps || "";
-        
-        // Si no hay URL personalizada, construir con dirección
-        if (!mapsUrl && direccion !== "Dirección no disponible") {
-            mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
-        } else if (!mapsUrl) {
-            mapsUrl = "https://maps.google.com";
-        }
-        
-        let whatsappUrl = "#";
-        let isWhatsappDisabled = false;
-        if (telefono) {
-            let cleanPhone = telefono.replace(/[\s\-\(\)]/g, '');
-            if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('54') && cleanPhone.length <= 10) {
-                cleanPhone = '54' + cleanPhone;
-            }
-            whatsappUrl = `https://wa.me/${cleanPhone}?text=Hola%2C%20vi%20que%20est%C3%A1n%20de%20turno%20hoy.%20%C2%BFpodr%C3%ADan%20ayudarme%3F`;
-        } else {
-            isWhatsappDisabled = true;
-        }
-        
-        const fechaHoy = getFormattedDate();
-        
-        return `
-            <div class="header-badge">
-                <span class="turn-indicator"><i class="fas fa-prescription-bottle"></i> Farmacia de turno hoy</span>
-                <span class="current-date"><i class="far fa-calendar-alt"></i> ${fechaHoy}</span>
-            </div>
-            <div class="pharmacy-name">${escapeHtml(nombre)}</div>
-            <div class="address-block">
-                <div class="address-icon"><i class="fas fa-map-marker-alt"></i></div>
-                <div class="address-text">${escapeHtml(direccion)}</div>
-            </div>
-            <div class="buttons-container">
-                <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" 
-                   class="btn btn-whatsapp ${isWhatsappDisabled ? 'disabled-btn' : ''}" 
-                   ${isWhatsappDisabled ? 'onclick="return false;"' : ''}
-                   style="${isWhatsappDisabled ? 'opacity:0.5; pointer-events:none; background:#a0c2b0;' : ''}">
-                    <i class="fab fa-whatsapp"></i> WhatsApp
-                </a>
-                <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-maps">
-                    <i class="fas fa-map"></i> Ver en Maps
-                </a>
-            </div>
-            ${isWhatsappDisabled ? '<p style="font-size:0.7rem; margin-top:12px; color:#9aaebf;"><i class="fas fa-info-circle"></i> Sin número de WhatsApp disponible</p>' : ''}
-        `;
+function renderPharmacyCard(pharmacy) {
+    const nombre = pharmacy.nombre || "Farmacia de turno";
+    const direccion = pharmacy.direccion || "Dirección no disponible";
+    const telefono = pharmacy.telefono || "";
+    let mapsUrl = pharmacy.urlMaps || "";
+    
+    // Si no hay URL personalizada, construir con dirección
+    if (!mapsUrl && direccion !== "Dirección no disponible") {
+        mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
+    } else if (!mapsUrl) {
+        mapsUrl = "https://maps.google.com";
     }
+    
+    let whatsappUrl = "#";
+    let isWhatsappDisabled = false;
+    if (telefono) {
+        // ✅ CORRECCIÓN: convertir a string antes de usar replace
+        let telefonoStr = String(telefono);
+        let cleanPhone = telefonoStr.replace(/[\s\-\(\)]/g, '');
+        if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('54') && cleanPhone.length <= 10) {
+            cleanPhone = '54' + cleanPhone;
+        }
+        whatsappUrl = `https://wa.me/${cleanPhone}?text=Hola%2C%20vi%20que%20est%C3%A1n%20de%20turno%20hoy.%20%C2%BFpodr%C3%ADan%20ayudarme%3F`;
+    } else {
+        isWhatsappDisabled = true;
+    }
+    
+    const fechaHoy = getFormattedDate();
+    
+    return `
+        <div class="header-badge">
+            <span class="turn-indicator"><i class="fas fa-prescription-bottle"></i> Farmacia de turno hoy</span>
+            <span class="current-date"><i class="far fa-calendar-alt"></i> ${fechaHoy}</span>
+        </div>
+        <div class="pharmacy-name">${escapeHtml(nombre)}</div>
+        <div class="address-block">
+            <div class="address-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="address-text">${escapeHtml(direccion)}</div>
+        </div>
+        <div class="buttons-container">
+            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" 
+               class="btn btn-whatsapp ${isWhatsappDisabled ? 'disabled-btn' : ''}" 
+               ${isWhatsappDisabled ? 'onclick="return false;"' : ''}
+               style="${isWhatsappDisabled ? 'opacity:0.5; pointer-events:none; background:#a0c2b0;' : ''}">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-maps">
+                <i class="fas fa-map"></i> Ver en Maps
+            </a>
+        </div>
+        ${isWhatsappDisabled ? '<p style="font-size:0.7rem; margin-top:12px; color:#9aaebf;"><i class="fas fa-info-circle"></i> Sin número de WhatsApp disponible</p>' : ''}
+    `;
+}
     
     function showError(message) {
         appContainer.innerHTML = `
