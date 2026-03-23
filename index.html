@@ -7,328 +7,347 @@
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        :root {
+            --bg-from:   #0a0f1e;
+            --bg-to:     #0d1b2a;
+            --card-bg:   rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.10);
+            --accent:    #38bdf8;
+            --accent2:   #818cf8;
+            --green:     #34d399;
+            --green-bg:  rgba(52, 211, 153, 0.12);
+            --text-main: #f0f6ff;
+            --text-sub:  #94a3b8;
+            --text-dim:  #475569;
+            --address-bg: rgba(255,255,255,0.05);
+            --progress-bg: rgba(255,255,255,0.07);
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            background: var(--bg-from);
+            background-image:
+                radial-gradient(ellipse 80% 60% at 20% -10%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 110%, rgba(129, 140, 248, 0.10) 0%, transparent 60%),
+                linear-gradient(160deg, var(--bg-from) 0%, var(--bg-to) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px 16px;
+            padding: 28px 16px;
         }
-
         .container {
             max-width: 680px;
             width: 100%;
             margin: 0 auto;
         }
-
+        /* ---------- CARD ---------- */
         .pharmacy-card {
-            background: rgba(255, 255, 255, 0.96);
-            border-radius: 48px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 32px 28px;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.6);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 32px 64px -16px rgba(0, 0, 0, 0.5),
+                0 8px 20px rgba(0,0,0,0.3);
+            padding: 36px 32px;
+            animation: fadeSlideUp 0.55s cubic-bezier(.22,.68,0,1.2) both;
+            position: relative;
+            overflow: hidden;
         }
-
+        /* Subtle top-glow line */
+        .pharmacy-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            background: linear-gradient(135deg, rgba(56,189,248,0.07) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        /* ---------- HEADER BADGE ---------- */
         .header-badge {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 20px;
-            gap: 12px;
+            margin-bottom: 24px;
+            gap: 10px;
         }
-
         .turn-indicator {
-            background: #eaf9e7;
-            color: #1e7b3c;
+            background: var(--green-bg);
+            color: var(--green);
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             padding: 6px 14px;
-            border-radius: 60px;
+            border-radius: 40px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            letter-spacing: 0.02em;
         }
-
+        .turn-indicator::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            background: var(--green);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 3px rgba(52,211,153,0.2);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(52,211,153,0.2); }
+            50%       { box-shadow: 0 0 0 6px rgba(52,211,153,0.08); }
+        }
         .current-date {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #5b6e8c;
-            background: rgba(91, 110, 140, 0.1);
+            color: var(--text-sub);
+            background: rgba(255,255,255,0.06);
             padding: 6px 14px;
-            border-radius: 60px;
+            border-radius: 40px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            border: 1px solid rgba(255,255,255,0.08);
         }
-
+        /* ---------- PHARMACY NAME ---------- */
         .pharmacy-name {
-            font-size: 2.4rem;
+            font-size: 2.6rem;
             font-weight: 800;
-            line-height: 1.2;
-            margin: 0 0 16px 0;
-            color: #0a1c2f;
-            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin: 0 0 20px 0;
+            color: var(--text-main);
+            letter-spacing: -0.03em;
             word-break: break-word;
+            background: linear-gradient(130deg, #f0f6ff 30%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
+        /* ---------- ADDRESS ---------- */
         .address-block {
             display: flex;
-            gap: 12px;
-            background: #f8fafd;
+            gap: 14px;
+            background: var(--address-bg);
             padding: 16px 18px;
-            border-radius: 28px;
-            margin: 0 0 32px 0;
+            border-radius: 18px;
+            margin: 0 0 28px 0;
             align-items: flex-start;
-            border: 1px solid #eef2f8;
+            border: 1px solid rgba(255,255,255,0.07);
         }
-
         .address-icon {
-            color: #3b82f6;
-            font-size: 1.4rem;
+            color: var(--accent);
+            font-size: 1.2rem;
             margin-top: 2px;
+            flex-shrink: 0;
         }
-
         .address-text {
-            font-size: 1rem;
+            font-size: 0.97rem;
             font-weight: 500;
-            color: #1e2f44;
-            line-height: 1.4;
+            color: var(--text-sub);
+            line-height: 1.5;
             flex: 1;
         }
-
+        /* ---------- BUTTONS ---------- */
         .buttons-container {
             display: flex;
             flex-direction: row;
-            gap: 18px;
-            margin-top: 12px;
+            gap: 14px;
+            margin-top: 0;
             flex-wrap: wrap;
         }
-
         .btn {
             flex: 1;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 18px 14px;
-            border-radius: 60px;
+            gap: 10px;
+            padding: 16px 14px;
+            border-radius: 16px;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-decoration: none;
-            transition: all 0.25s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
             border: none;
             cursor: pointer;
-            background: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.01em;
         }
-
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0);
+            transition: background 0.2s;
+            border-radius: inherit;
+        }
+        .btn:hover::after { background: rgba(255,255,255,0.08); }
         .btn-whatsapp {
-            background: #25D366;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
             color: white;
-            box-shadow: 0 8px 18px -8px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 4px 20px -6px rgba(37, 211, 102, 0.45);
         }
-
-        .btn-whatsapp i {
-            font-size: 1.5rem;
-        }
-
+        .btn-whatsapp i { font-size: 1.35rem; }
         .btn-whatsapp:hover {
-            background: #20b859;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 22px -10px rgba(37, 211, 102, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px -8px rgba(37, 211, 102, 0.55);
         }
-
         .btn-call {
-            background: #3b82f6;
+            background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
             color: white;
-            box-shadow: 0 8px 18px -8px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 4px 20px -6px rgba(56, 189, 248, 0.4);
         }
-
-        .btn-call i {
-            font-size: 1.4rem;
-        }
-
+        .btn-call i { font-size: 1.2rem; }
         .btn-call:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 22px -10px rgba(59, 130, 246, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px -8px rgba(56, 189, 248, 0.5);
         }
-
         .btn-maps {
-            background: #ffffff;
-            color: #1a73e8;
-            border: 1px solid #dce5f0;
+            background: rgba(255,255,255,0.07);
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.12);
         }
-
         .btn-maps i {
-            font-size: 1.4rem;
-            color: #ea4335;
+            font-size: 1.2rem;
+            color: #f87171;
         }
-
         .btn-maps:hover {
-            background: #f0f6ff;
-            border-color: #c2d4ff;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.11);
+            border-color: rgba(255,255,255,0.2);
         }
-
         .disabled-btn {
-            opacity: 0.5;
-            background: #e2e8f0;
-            color: #64748b;
+            opacity: 0.35;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-dim);
             cursor: default;
+            border: 1px solid rgba(255,255,255,0.07);
         }
-
-        /* Contador regresivo y barra de progreso */
+        .disabled-btn:hover { transform: none; }
+        /* ---------- PROGRESS / COUNTDOWN ---------- */
         .turno-progress {
-            margin: 32px 0 0 0;
-            background: #f1f5f9;
-            border-radius: 24px;
-            padding: 16px 20px;
+            margin: 28px 0 0 0;
+            background: var(--progress-bg);
+            border-radius: 20px;
+            padding: 18px 20px;
+            border: 1px solid rgba(255,255,255,0.07);
         }
-
         .progress-label {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 500;
-            color: #334155;
-            margin-bottom: 10px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
-
+        .progress-label i { color: var(--accent2); }
         .countdown-digits {
             font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             font-weight: 700;
-            background: #0f172a;
-            color: #facc15;
-            padding: 4px 12px;
+            background: rgba(129,140,248,0.15);
+            color: var(--accent2);
+            padding: 3px 12px;
             border-radius: 40px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            border: 1px solid rgba(129,140,248,0.25);
         }
-
         .progress-bar-container {
-            background-color: #e2e8f0;
+            background: rgba(255,255,255,0.07);
             border-radius: 40px;
-            height: 8px;
+            height: 6px;
             overflow: hidden;
-            margin: 8px 0;
+            margin: 4px 0 8px;
         }
-
         .progress-bar-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #3b82f6, #2dd4bf);
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
             border-radius: 40px;
-            transition: width 0.5s ease-out;
+            transition: width 0.6s ease-out;
+            box-shadow: 0 0 10px rgba(56,189,248,0.5);
         }
-
         .progress-note {
             font-size: 0.7rem;
-            color: #5b6e8c;
-            margin-top: 8px;
+            color: var(--text-dim);
             text-align: right;
+            margin-top: 2px;
         }
-
+        /* ---------- LOADING / ERROR ---------- */
         .loading-state, .error-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 48px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
         }
-
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #2c7da0;
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(255,255,255,0.08);
+            border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.9s linear infinite;
+            animation: spin 0.85s linear infinite;
         }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-state p { color: var(--text-sub); font-size: 0.95rem; }
         .retry-btn {
-            background: #2c3e66;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
             color: white;
-            padding: 12px 24px;
+            padding: 12px 28px;
             border-radius: 40px;
             border: none;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px -4px rgba(56,189,248,0.4);
         }
-
+        .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px -6px rgba(56,189,248,0.5); }
+        .error-state i { font-size: 2.2rem; color: #f87171; }
+        .error-state p { color: #fca5a5; font-weight: 500; }
+        /* ---------- FOOTER ---------- */
         .footer-credit {
             text-align: center;
-            margin-top: 28px;
-            font-size: 0.75rem;
-            color: #8ba0bc;
+            margin-top: 22px;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 0.04em;
         }
-
+        /* ---------- ANIMATIONS ---------- */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0)   scale(1);    }
+        }
+        /* ---------- RESPONSIVE ---------- */
         @media (max-width: 550px) {
             .pharmacy-card {
                 padding: 24px 20px;
-                border-radius: 36px;
+                border-radius: 24px;
             }
-            .pharmacy-name {
-                font-size: 1.9rem;
-            }
-            .buttons-container {
-                flex-direction: column;
-            }
-            .btn {
-                padding: 16px 12px;
-                font-size: 1rem;
-            }
-            .countdown-digits {
-                font-size: 1rem;
-                padding: 3px 10px;
-            }
+            .pharmacy-name { font-size: 2rem; }
+            .buttons-container { flex-direction: column; }
+            .btn { padding: 15px 12px; font-size: 0.97rem; }
+            .countdown-digits { font-size: 0.95rem; }
         }
-
         @media (min-width: 768px) {
-            .pharmacy-name {
-                font-size: 3rem;
-            }
-            .pharmacy-card {
-                padding: 40px 38px;
-            }
-            .btn {
-                padding: 20px 18px;
-                font-size: 1.2rem;
-            }
-        }
-
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .pharmacy-card {
-            animation: fadeSlideUp 0.5s ease-out;
+            .pharmacy-name { font-size: 3.1rem; }
+            .pharmacy-card { padding: 44px 40px; }
+            .btn { padding: 18px 16px; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -337,28 +356,24 @@
     <div class="pharmacy-card" id="appContent">
         <div class="loading-state" id="loadingState">
             <div class="spinner"></div>
-            <p style="color:#4a627a;">Cargando farmacia de turno...</p>
+            <p>Cargando farmacia de turno...</p>
         </div>
     </div>
     <div class="footer-credit">
-        <i class="fas fa-shield-alt"></i> DigimediosApps - Sistemas de Gestión
+        <i class="fas fa-shield-alt"></i> DigimediosApps — Sistemas de Gestión
     </div>
 </div>
-
 <script>
     // ⚠️ REEMPLAZA ESTA URL CON LA DE TU WEB APP DE GOOGLE APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbxPbjHw0_UTBdMzTbnVxVsGnlE7a-vs4IbLqsetvYDuimYcoStAKnu27g1sigQwDHCwnA/exec";
-    
     const appContainer = document.getElementById('appContent');
     let countdownInterval = null;
-    
     function getFormattedDate() {
         const today = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         let formatted = today.toLocaleDateString('es-ES', options);
         return formatted.charAt(0).toUpperCase() + formatted.slice(1);
     }
-    
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -368,24 +383,19 @@
             return m;
         });
     }
-    
     // Calcular tiempo restante hasta las 08:00 AM
     function getTimeUntilNextTurn() {
         const now = new Date();
         const nextTurn = new Date(now);
-        
         nextTurn.setHours(8, 0, 0, 0);
-        
         if (now.getHours() >= 8) {
             nextTurn.setDate(now.getDate() + 1);
         }
-        
         const diffMs = nextTurn - now;
         const diffSecs = Math.floor(diffMs / 1000);
         const hours = Math.floor(diffSecs / 3600);
         const minutes = Math.floor((diffSecs % 3600) / 60);
         const seconds = diffSecs % 60;
-        
         // Porcentaje de progreso del turno actual
         let porcentaje = 0;
         const startOfDay = new Date(now);
@@ -393,7 +403,6 @@
         const endOfDay = new Date(now);
         endOfDay.setHours(8, 0, 0, 0);
         endOfDay.setDate(now.getDate() + 1);
-        
         if (now >= startOfDay) {
             const totalMs = endOfDay - startOfDay;
             const elapsedMs = now - startOfDay;
@@ -408,48 +417,39 @@
             const elapsedPrev = now - prevStart;
             porcentaje = (elapsedPrev / totalPrev) * 100;
         }
-        
         return { hours, minutes, seconds, porcentaje: Math.min(100, Math.max(0, porcentaje)) };
     }
-    
     // Actualizar contador en el DOM
     function updateCountdown() {
         const countdownElement = document.getElementById('countdown-timer');
         const progressBar = document.getElementById('progress-bar-fill');
-        
         if (!countdownElement || !progressBar) return;
-        
         const { hours, minutes, seconds, porcentaje } = getTimeUntilNextTurn();
         const formatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         countdownElement.textContent = formatted;
         progressBar.style.width = `${porcentaje}%`;
     }
-    
     // Iniciar el contador (se llama después de renderizar la card)
     function startCountdown() {
         if (countdownInterval) clearInterval(countdownInterval);
         updateCountdown();
         countdownInterval = setInterval(updateCountdown, 1000);
     }
-    
     // Renderizar la tarjeta principal
     function renderPharmacyCard(pharmacy) {
         const nombre = pharmacy.nombre || "Farmacia de turno";
         const direccion = pharmacy.direccion || "Dirección no disponible";
         const telefono = pharmacy.telefono || "";
         let mapsUrl = pharmacy.urlMaps || "";
-        
         if (!mapsUrl && direccion !== "Dirección no disponible") {
             mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
         } else if (!mapsUrl) {
             mapsUrl = "https://maps.google.com";
         }
-        
         // Detección automática del tipo de teléfono
         let telefonoStr = String(telefono).trim();
         let esWhatsApp = false;
         let numeroLimpio = telefonoStr.replace(/[\s\-\(\)]/g, '');
-        
         if (numeroLimpio.startsWith('549') || numeroLimpio.startsWith('598')) {
             esWhatsApp = true;
         }
@@ -457,7 +457,6 @@
             esWhatsApp = true;
             numeroLimpio = numeroLimpio.substring(1);
         }
-        
         let botonTelefono = "";
         if (!telefono) {
             botonTelefono = `
@@ -480,13 +479,11 @@
                 </a>
             `;
         }
-        
         const fechaHoy = getFormattedDate();
-        
         // Contador regresivo ubicado DESPUÉS de los botones
         return `
             <div class="header-badge">
-                <span class="turn-indicator"><i class="fas fa-prescription-bottle"></i> Farmacia de turno hoy</span>
+                <span class="turn-indicator">Farmacia de turno hoy</span>
                 <span class="current-date"><i class="far fa-calendar-alt"></i> ${fechaHoy}</span>
             </div>
             <div class="pharmacy-name">${escapeHtml(nombre)}</div>
@@ -512,32 +509,28 @@
             </div>
         `;
     }
-    
     function showError(message) {
         if (countdownInterval) clearInterval(countdownInterval);
         appContainer.innerHTML = `
             <div class="error-state">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p style="font-weight: 500; color:#b91c1c;">${escapeHtml(message)}</p>
+                <p>${escapeHtml(message)}</p>
                 <button class="retry-btn" id="retryButton"><i class="fas fa-sync-alt"></i> Reintentar</button>
             </div>
         `;
         document.getElementById('retryButton')?.addEventListener('click', fetchPharmacyOfTheDay);
     }
-    
     async function fetchPharmacyOfTheDay() {
         if (countdownInterval) clearInterval(countdownInterval);
-        appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p style="color:#4a627a;">Buscando farmacia de turno...</p></div>`;
+        appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Buscando farmacia de turno...</p></div>`;
         try {
             const url = `${API_URL}${API_URL.includes('?') ? '&' : '?'}_=${Date.now()}`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
             const data = await response.json();
-            
             if (!data.success || !data.pharmacy) {
                 throw new Error(data.error || "No se encontró farmacia para hoy");
             }
-            
             const htmlContent = renderPharmacyCard(data.pharmacy);
             appContainer.innerHTML = htmlContent;
             startCountdown();
@@ -546,7 +539,6 @@
             showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
         }
     }
-    
     document.addEventListener('DOMContentLoaded', fetchPharmacyOfTheDay);
 </script>
 </body>
