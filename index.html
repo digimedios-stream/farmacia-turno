@@ -192,18 +192,44 @@ function renderPharmacyCard(pharmacy) {
         mapsUrl = "https://maps.google.com";
     }
     
-    let whatsappUrl = "#";
-    let isWhatsappDisabled = false;
-    if (telefono) {
-        // ✅ CORRECCIÓN: convertir a string antes de usar replace
-        let telefonoStr = String(telefono);
-        let cleanPhone = telefonoStr.replace(/[\s\-\(\)]/g, '');
-        if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('54') && cleanPhone.length <= 10) {
-            cleanPhone = '54' + cleanPhone;
-        }
-        whatsappUrl = `https://wa.me/${cleanPhone}?text=Hola%2C%20vi%20que%20est%C3%A1n%20de%20turno%20hoy.%20%C2%BFpodr%C3%ADan%20ayudarme%3F`;
+    // Detección automática del tipo de teléfono
+    let telefonoStr = String(telefono).trim();
+    let esWhatsApp = false;
+    let numeroLimpio = telefonoStr.replace(/[\s\-\(\)]/g, '');
+    
+    // Detectar si es celular con código de Argentina (549) o Uruguay (598)
+    if (numeroLimpio.startsWith('549') || numeroLimpio.startsWith('598')) {
+        esWhatsApp = true;
+    }
+    // También detectar si tiene +549 o +598
+    if (numeroLimpio.startsWith('+549') || numeroLimpio.startsWith('+598')) {
+        esWhatsApp = true;
+        numeroLimpio = numeroLimpio.substring(1); // sacar el +
+    }
+    
+    let botonHTML = "";
+    if (!telefono) {
+        botonHTML = `
+            <div class="btn disabled-btn" style="opacity:0.5; background:#e2e8f0; color:#64748b; cursor:default; flex:1; display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:18px 14px; border-radius:60px;">
+                <i class="fas fa-phone-alt"></i> Sin teléfono disponible
+            </div>
+        `;
+    } else if (esWhatsApp) {
+        // Botón WhatsApp
+        let whatsappUrl = `https://wa.me/${numeroLimpio}?text=Hola%2C%20vi%20que%20est%C3%A1n%20de%20turno%20hoy.%20%C2%BFpodr%C3%ADan%20ayudarme%3F`;
+        botonHTML = `
+            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+        `;
     } else {
-        isWhatsappDisabled = true;
+        // Botón de llamada (teléfono fijo)
+        let callUrl = `tel:${numeroLimpio}`;
+        botonHTML = `
+            <a href="${callUrl}" class="btn btn-call">
+                <i class="fas fa-phone-alt"></i> Llamar ahora
+            </a>
+        `;
     }
     
     const fechaHoy = getFormattedDate();
@@ -219,17 +245,11 @@ function renderPharmacyCard(pharmacy) {
             <div class="address-text">${escapeHtml(direccion)}</div>
         </div>
         <div class="buttons-container">
-            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" 
-               class="btn btn-whatsapp ${isWhatsappDisabled ? 'disabled-btn' : ''}" 
-               ${isWhatsappDisabled ? 'onclick="return false;"' : ''}
-               style="${isWhatsappDisabled ? 'opacity:0.5; pointer-events:none; background:#a0c2b0;' : ''}">
-                <i class="fab fa-whatsapp"></i> WhatsApp
-            </a>
+            ${botonHTML}
             <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-maps">
                 <i class="fas fa-map"></i> Ver en Maps
             </a>
         </div>
-        ${isWhatsappDisabled ? '<p style="font-size:0.7rem; margin-top:12px; color:#9aaebf;"><i class="fas fa-info-circle"></i> Sin número de WhatsApp disponible</p>' : ''}
     `;
 }
     
