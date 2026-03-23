@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>Farmacia de Turno | Tu salud siempre cerca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+        }
+        .container { max-width: 680px; width: 100%; margin: 0 auto; }
+        .pharmacy-card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 48px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 32px 28px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .header-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+            gap: 12px;
+        }
+        .turn-indicator {
+            background: #eaf9e7;
+            color: #1e7b3c;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .current-date {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #5b6e8c;
+            background: rgba(91, 110, 140, 0.1);
+            padding: 6px 14px;
+            border-radius: 60px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .pharmacy-name {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin: 20px 0 16px 0;
+            color: #0a1c2f;
+            letter-spacing: -0.02em;
+            word-break: break-word;
+        }
+        .address-block {
+            display: flex;
+            gap: 12px;
+            background: #f8fafd;
+            padding: 16px 18px;
+            border-radius: 28px;
+            margin: 20px 0 32px 0;
+            align-items: flex-start;
+            border: 1px solid #eef2f8;
+        }
+        .address-icon { color: #3b82f6; font-size: 1.4rem; margin-top: 2px; }
+        .address-text { font-size: 1rem; font-weight: 500; color: #1e2f44; line-height: 1.4; flex: 1; }
+        .buttons-container {
+            display: flex;
+            flex-direction: row;
+            gap: 18px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 14px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            border: none;
+            cursor: pointer;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 8px 18px -8px rgba(37, 211, 102, 0.4);
+        }
+        .btn-whatsapp i { font-size: 1.5rem; }
+        .btn-whatsapp:hover {
+            background: #20b859;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px -10px rgba(37, 211, 102, 0.5);
+        }
+        .btn-maps {
+            background: #ffffff;
+            color: #1a73e8;
+            border: 1px solid #dce5f0;
+        }
+        .btn-maps i { font-size: 1.4rem; color: #ea4335; }
+        .btn-maps:hover {
+            background: #f0f6ff;
+            border-color: #c2d4ff;
+            transform: translateY(-2px);
+        }
+        .loading-state, .error-state { text-align: center; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .spinner { width: 48px; height: 48px; border: 4px solid #e2e8f0; border-top-color: #2c7da0; border-radius: 50%; animation: spin 0.9s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .retry-btn { background: #2c3e66; color: white; padding: 12px 24px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; }
+        .footer-credit { text-align: center; margin-top: 28px; font-size: 0.75rem; color: #8ba0bc; }
+        @media (max-width: 550px) {
+            .pharmacy-card { padding: 24px 20px; border-radius: 36px; }
+            .pharmacy-name { font-size: 1.9rem; }
+            .buttons-container { flex-direction: column; }
+            .btn { padding: 16px 12px; font-size: 1rem; }
+        }
+        @media (min-width: 768px) {
+            .pharmacy-name { font-size: 3rem; }
+            .pharmacy-card { padding: 40px 38px; }
+            .btn { padding: 20px 18px; font-size: 1.2rem; }
+        }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .pharmacy-card { animation: fadeSlideUp 0.5s ease-out; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="pharmacy-card" id="appContent">
+        <div class="loading-state" id="loadingState">
+            <div class="spinner"></div>
+            <p style="color:#4a627a;">Cargando farmacia de turno...</p>
+        </div>
+    </div>
+    <div class="footer-credit">
+        <i class="fas fa-shield-alt"></i> Actualización diaria · Servicio público
+    </div>
+</div>
+
+<script>
+    // ⚠️ REEMPLAZA ESTA URL CON LA DE TU WEB APP DE GOOGLE APPS SCRIPT
+    const API_URL = "https://script.google.com/macros/s/AKfycbxPbjHw0_UTBdMzTbnVxVsGnlE7a-vs4IbLqsetvYDuimYcoStAKnu27g1sigQwDHCwnA/exec";
+    
+    const appContainer = document.getElementById('appContent');
+    
+    function getFormattedDate() {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let formatted = today.toLocaleDateString('es-ES', options);
+        return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function renderPharmacyCard(pharmacy) {
+        const nombre = pharmacy.nombre || "Farmacia de turno";
+        const direccion = pharmacy.direccion || "Dirección no disponible";
+        const telefono = pharmacy.telefono || "";
+        let mapsUrl = pharmacy.urlMaps || "";
+        
+        // Si no hay URL personalizada, construir con dirección
+        if (!mapsUrl && direccion !== "Dirección no disponible") {
+            mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(direccion)}`;
+        } else if (!mapsUrl) {
+            mapsUrl = "https://maps.google.com";
+        }
+        
+        let whatsappUrl = "#";
+        let isWhatsappDisabled = false;
+        if (telefono) {
+            let cleanPhone = telefono.replace(/[\s\-\(\)]/g, '');
+            if (!cleanPhone.startsWith('+') && !cleanPhone.startsWith('54') && cleanPhone.length <= 10) {
+                cleanPhone = '54' + cleanPhone;
+            }
+            whatsappUrl = `https://wa.me/${cleanPhone}?text=Hola%2C%20vi%20que%20est%C3%A1n%20de%20turno%20hoy.%20%C2%BFpodr%C3%ADan%20ayudarme%3F`;
+        } else {
+            isWhatsappDisabled = true;
+        }
+        
+        const fechaHoy = getFormattedDate();
+        
+        return `
+            <div class="header-badge">
+                <span class="turn-indicator"><i class="fas fa-prescription-bottle"></i> Farmacia de turno hoy</span>
+                <span class="current-date"><i class="far fa-calendar-alt"></i> ${fechaHoy}</span>
+            </div>
+            <div class="pharmacy-name">${escapeHtml(nombre)}</div>
+            <div class="address-block">
+                <div class="address-icon"><i class="fas fa-map-marker-alt"></i></div>
+                <div class="address-text">${escapeHtml(direccion)}</div>
+            </div>
+            <div class="buttons-container">
+                <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" 
+                   class="btn btn-whatsapp ${isWhatsappDisabled ? 'disabled-btn' : ''}" 
+                   ${isWhatsappDisabled ? 'onclick="return false;"' : ''}
+                   style="${isWhatsappDisabled ? 'opacity:0.5; pointer-events:none; background:#a0c2b0;' : ''}">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-maps">
+                    <i class="fas fa-map"></i> Ver en Maps
+                </a>
+            </div>
+            ${isWhatsappDisabled ? '<p style="font-size:0.7rem; margin-top:12px; color:#9aaebf;"><i class="fas fa-info-circle"></i> Sin número de WhatsApp disponible</p>' : ''}
+        `;
+    }
+    
+    function showError(message) {
+        appContainer.innerHTML = `
+            <div class="error-state">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p style="font-weight: 500; color:#b91c1c;">${escapeHtml(message)}</p>
+                <button class="retry-btn" id="retryButton"><i class="fas fa-sync-alt"></i> Reintentar</button>
+            </div>
+        `;
+        document.getElementById('retryButton')?.addEventListener('click', fetchPharmacyOfTheDay);
+    }
+    
+    async function fetchPharmacyOfTheDay() {
+        appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p style="color:#4a627a;">Buscando farmacia de turno...</p></div>`;
+        try {
+            const url = `${API_URL}${API_URL.includes('?') ? '&' : '?'}_=${Date.now()}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            const data = await response.json();
+            
+            if (!data.success || !data.pharmacy) {
+                throw new Error(data.error || "No se encontró farmacia para hoy");
+            }
+            
+            appContainer.innerHTML = renderPharmacyCard(data.pharmacy);
+        } catch (error) {
+            console.error(error);
+            showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', fetchPharmacyOfTheDay);
+</script>
+</body>
+</html>
