@@ -648,7 +648,13 @@
         });
     }
     
-    document.addEventListener('DOMContentLoaded', fetchPharmacyOfTheDay);
+    // Iniciar: si el DOM ya cargó (script al final del body) lo llama directo.
+    // Compatibilidad con Chromium 77 donde DOMContentLoaded puede ya haber disparado.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fetchPharmacyOfTheDay);
+    } else {
+        fetchPharmacyOfTheDay();
+    }
 </script>
 </body>
 </html>
