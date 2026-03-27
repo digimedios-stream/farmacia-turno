@@ -577,26 +577,51 @@
         document.getElementById('retryButton')?.addEventListener('click', fetchPharmacyOfTheDay);
     }
     
-    async function fetchPharmacyOfTheDay() {
+    function fetchPharmacyOfTheDay() {
         if (countdownInterval) clearInterval(countdownInterval);
         appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Buscando farmacia de turno...</p></div>`;
-        try {
-            const url = `${API_URL}${API_URL.includes('?') ? '&' : '?'}_=${Date.now()}`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-            const data = await response.json();
-            
-            if (!data.success || !data.pharmacy) {
-                throw new Error(data.error || "No se encontró farmacia para hoy");
-            }
-            
-            const htmlContent = renderPharmacyCard(data.pharmacy);
-            appContainer.innerHTML = htmlContent;
-            startCountdownWithVerifier();
-        } catch (error) {
-            console.error(error);
-            showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
-        }
+        return new Promise(function(resolve, reject) {
+            var url = API_URL + (API_URL.indexOf('?') !== -1 ? '&' : '?') + '_=' + Date.now();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.timeout = 10000; // 10 segundos de timeout
+            xhr.onload = function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if (!data.success || !data.pharmacy) {
+                            throw new Error(data.error || "No se encontró farmacia para hoy");
+                        }
+                        var htmlContent = renderPharmacyCard(data.pharmacy);
+                        appContainer.innerHTML = htmlContent;
+                        startCountdownWithVerifier();
+                        resolve();
+                    } catch (e) {
+                        console.error(e);
+                        showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                        reject(e);
+                    }
+                } else {
+                    var err = new Error("Error HTTP: " + xhr.status);
+                    console.error(err);
+                    showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                    reject(err);
+                }
+            };
+            xhr.onerror = function() {
+                var err = new Error("Error de red");
+                console.error(err);
+                showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                reject(err);
+            };
+            xhr.ontimeout = function() {
+                var err = new Error("Tiempo de espera agotado");
+                console.error(err);
+                showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                reject(err);
+            };
+            xhr.send();
+        });
     }
     
     document.addEventListener('DOMContentLoaded', fetchPharmacyOfTheDay);
