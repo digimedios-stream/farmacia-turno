@@ -581,10 +581,25 @@
         if (countdownInterval) clearInterval(countdownInterval);
         appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Buscando farmacia de turno...</p></div>`;
         return new Promise(function(resolve, reject) {
+            var done = false;
+            // Fallback manual: si en 8s ningún handler respondió, mostramos error
+            var safetyTimer = setTimeout(function() {
+                if (!done) {
+                    done = true;
+                    showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                    reject(new Error("Timeout de seguridad"));
+                }
+            }, 8000);
+            function finish(fn) {
+                if (done) return;
+                done = true;
+                clearTimeout(safetyTimer);
+                fn();
+            }
             var url = API_URL + (API_URL.indexOf('?') !== -1 ? '&' : '?') + '_=' + Date.now();
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);
-            xhr.timeout = 10000; // 10 segundos de timeout
+            xhr.timeout = 7000;
             xhr.onload = function() {
                 if (xhr.status >= 200 && xhr.status < 300) {
                     try {
@@ -592,33 +607,42 @@
                         if (!data.success || !data.pharmacy) {
                             throw new Error(data.error || "No se encontró farmacia para hoy");
                         }
-                        var htmlContent = renderPharmacyCard(data.pharmacy);
-                        appContainer.innerHTML = htmlContent;
-                        startCountdownWithVerifier();
-                        resolve();
+                        finish(function() {
+                            appContainer.innerHTML = renderPharmacyCard(data.pharmacy);
+                            startCountdownWithVerifier();
+                            resolve();
+                        });
                     } catch (e) {
-                        console.error(e);
-                        showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
-                        reject(e);
+                        finish(function() {
+                            console.error(e);
+                            showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                            reject(e);
+                        });
                     }
                 } else {
-                    var err = new Error("Error HTTP: " + xhr.status);
-                    console.error(err);
-                    showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
-                    reject(err);
+                    finish(function() {
+                        var err = new Error("Error HTTP: " + xhr.status);
+                        console.error(err);
+                        showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                        reject(err);
+                    });
                 }
             };
             xhr.onerror = function() {
-                var err = new Error("Error de red");
-                console.error(err);
-                showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
-                reject(err);
+                finish(function() {
+                    var err = new Error("Error de red");
+                    console.error(err);
+                    showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                    reject(err);
+                });
             };
             xhr.ontimeout = function() {
-                var err = new Error("Tiempo de espera agotado");
-                console.error(err);
-                showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
-                reject(err);
+                finish(function() {
+                    var err = new Error("Tiempo de espera agotado");
+                    console.error(err);
+                    showError("No se pudo cargar la farmacia de turno. Verifica tu conexión o intenta más tarde.");
+                    reject(err);
+                });
             };
             xhr.send();
         });
