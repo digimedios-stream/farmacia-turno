@@ -17,12 +17,13 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            background: linear-gradient(145deg, #0f172a 0%, #020617 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px 16px;
+            color: #f8fafc;
         }
 
         .container {
@@ -32,12 +33,14 @@
         }
 
         .pharmacy-card {
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 48px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
             padding: 32px 28px;
             transition: all 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header-badge {
@@ -50,8 +53,8 @@
         }
 
         .turn-indicator {
-            background: #eaf9e7;
-            color: #1e7b3c;
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
             font-weight: 600;
             font-size: 0.85rem;
             padding: 6px 14px;
@@ -59,18 +62,20 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
         .current-date {
             font-size: 0.9rem;
             font-weight: 500;
-            color: #5b6e8c;
-            background: rgba(91, 110, 140, 0.1);
+            color: #94a3b8;
+            background: rgba(148, 163, 184, 0.1);
             padding: 6px 14px;
             border-radius: 60px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
         }
 
         .pharmacy-name {
@@ -78,7 +83,7 @@
             font-weight: 800;
             line-height: 1.2;
             margin: 0 0 16px 0;
-            color: #0a1c2f;
+            color: #f8fafc;
             letter-spacing: -0.02em;
             word-break: break-word;
         }
@@ -86,16 +91,16 @@
         .address-block {
             display: flex;
             gap: 12px;
-            background: #f8fafd;
+            background: rgba(15, 23, 42, 0.6);
             padding: 16px 18px;
             border-radius: 28px;
             margin: 0 0 32px 0;
             align-items: flex-start;
-            border: 1px solid #eef2f8;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .address-icon {
-            color: #3b82f6;
+            color: #60a5fa;
             font-size: 1.4rem;
             margin-top: 2px;
         }
@@ -103,7 +108,7 @@
         .address-text {
             font-size: 1rem;
             font-weight: 500;
-            color: #1e2f44;
+            color: #e2e8f0;
             line-height: 1.4;
             flex: 1;
         }
@@ -130,14 +135,15 @@
             transition: all 0.25s ease;
             border: none;
             cursor: pointer;
-            background: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background: #1e293b;
+            color: #f8fafc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            box-shadow: 0 8px 18px -8px rgba(37, 211, 102, 0.4);
+            background: #22c55e;
+            color: #022c22;
+            box-shadow: 0 8px 18px -8px rgba(34, 197, 94, 0.4);
         }
 
         .btn-whatsapp i {
@@ -145,9 +151,9 @@
         }
 
         .btn-whatsapp:hover {
-            background: #20b859;
+            background: #16a34a;
             transform: translateY(-2px);
-            box-shadow: 0 12px 22px -10px rgba(37, 211, 102, 0.5);
+            box-shadow: 0 12px 22px -10px rgba(34, 197, 94, 0.5);
         }
 
         .btn-call {
@@ -167,19 +173,19 @@
         }
 
         .btn-maps {
-            background: #ffffff;
-            color: #1a73e8;
-            border: 1px solid #dce5f0;
+            background: rgba(51, 65, 85, 0.8);
+            color: #60a5fa;
+            border: 1px solid #475569;
         }
 
         .btn-maps i {
             font-size: 1.4rem;
-            color: #ea4335;
+            color: #ef4444;
         }
 
         .btn-maps:hover {
-            background: #f0f6ff;
-            border-color: #c2d4ff;
+            background: #475569;
+            border-color: #64748b;
             transform: translateY(-2px);
         }
 
@@ -202,22 +208,23 @@
 
         .disabled-btn {
             opacity: 0.5;
-            background: #e2e8f0;
-            color: #64748b;
+            background: #334155;
+            color: #94a3b8;
             cursor: default;
         }
 
         .turno-progress {
             margin: 32px 0 0 0;
-            background: #f1f5f9;
+            background: rgba(15, 23, 42, 0.6);
             border-radius: 24px;
             padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .progress-label {
             font-size: 0.85rem;
             font-weight: 500;
-            color: #334155;
+            color: #cbd5e1;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -229,15 +236,16 @@
             font-family: 'Monaco', 'Courier New', monospace;
             font-size: 1.2rem;
             font-weight: 700;
-            background: #0f172a;
+            background: #020617;
             color: #facc15;
             padding: 4px 12px;
             border-radius: 40px;
             letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .progress-bar-container {
-            background-color: #e2e8f0;
+            background-color: #334155;
             border-radius: 40px;
             height: 8px;
             overflow: hidden;
@@ -254,7 +262,7 @@
 
         .progress-note {
             font-size: 0.7rem;
-            color: #5b6e8c;
+            color: #94a3b8;
             margin-top: 8px;
             text-align: right;
         }
@@ -271,8 +279,8 @@
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #2c7da0;
+            border: 4px solid #334155;
+            border-top-color: #38bdf8;
             border-radius: 50%;
             animation: spin 0.9s linear infinite;
         }
@@ -282,7 +290,7 @@
         }
 
         .retry-btn {
-            background: #2c3e66;
+            background: #3b82f6;
             color: white;
             padding: 12px 24px;
             border-radius: 40px;
@@ -291,11 +299,15 @@
             cursor: pointer;
         }
 
+        .retry-btn:hover {
+            background: #2563eb;
+        }
+
         .footer-credit {
             text-align: center;
             margin-top: 28px;
             font-size: 0.75rem;
-            color: #8ba0bc;
+            color: #64748b;
         }
 
         @media (max-width: 550px) {
@@ -353,7 +365,7 @@
     <div class="pharmacy-card" id="appContent">
         <div class="loading-state" id="loadingState">
             <div class="spinner"></div>
-            <p style="color:#4a627a;">Cargando farmacia de turno...</p>
+            <p style="color:#94a3b8;">Cargando farmacia de turno...</p>
         </div>
     </div>
     <div class="footer-credit">
@@ -570,7 +582,7 @@
         appContainer.innerHTML = `
             <div class="error-state">
                 <i class="fas fa-exclamation-triangle"></i>
-                <p style="font-weight: 500; color:#b91c1c;">${escapeHtml(message)}</p>
+                <p style="font-weight: 500; color:#ef4444;">${escapeHtml(message)}</p>
                 <button class="retry-btn" id="retryButton"><i class="fas fa-sync-alt"></i> Reintentar</button>
             </div>
         `;
@@ -579,7 +591,7 @@
     
     async function fetchPharmacyOfTheDay() {
         if (countdownInterval) clearInterval(countdownInterval);
-        appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p style="color:#4a627a;">Buscando farmacia de turno...</p></div>`;
+        appContainer.innerHTML = `<div class="loading-state"><div class="spinner"></div><p style="color:#94a3b8;">Buscando farmacia de turno...</p></div>`;
         try {
             const url = `${API_URL}${API_URL.includes('?') ? '&' : '?'}_=${Date.now()}`;
             const response = await fetch(url);
